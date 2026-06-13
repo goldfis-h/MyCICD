@@ -1,0 +1,15 @@
+import { createFileRoute, redirect } from '@tanstack/react-router'
+
+import { logout } from '#/server/shopify/customer.functions'
+
+export const Route = createFileRoute('/shop/account/logout')({
+  beforeLoad: async () => {
+    const { endSessionUrl } = await logout()
+    if (endSessionUrl) {
+      // Bounce through Shopify's end-session endpoint to clear their session too.
+      throw redirect({ href: endSessionUrl })
+    }
+    throw redirect({ to: '/shop' })
+  },
+  component: () => null,
+})
