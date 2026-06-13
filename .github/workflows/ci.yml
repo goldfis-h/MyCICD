@@ -39,6 +39,9 @@ jobs:
           DATABASE_URL: postgresql://localhost:5432/dummy
         run: npx prisma generate
 
+      - name: Generate Paraglide i18n files
+        run: npx @inlang/paraglide-js compile
+
       - name: Biome 检查
         run: npx biome ci
 
