@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 打印欢迎信息
+        run: echo "🎉 我的第一个 GitHub Actions 流水线跑起来了！"
