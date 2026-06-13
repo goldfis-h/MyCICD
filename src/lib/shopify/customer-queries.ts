@@ -32,31 +32,31 @@ export const CUSTOMER_QUERY = /* GraphQL */ `
       }
     }
   }
-`
+`;
 
 export type CustomerProfile = {
-  id: string
-  firstName: string | null
-  lastName: string | null
-  emailAddress: { emailAddress: string } | null
-  phoneNumber: { phoneNumber: string } | null
-  defaultAddress: CustomerAddress | null
-}
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	emailAddress: { emailAddress: string } | null;
+	phoneNumber: { phoneNumber: string } | null;
+	defaultAddress: CustomerAddress | null;
+};
 
-export type CustomerQueryResult = { customer: CustomerProfile }
+export type CustomerQueryResult = { customer: CustomerProfile };
 
 export type CustomerAddress = {
-  id: string
-  firstName: string | null
-  lastName: string | null
-  address1: string | null
-  address2: string | null
-  city: string | null
-  zoneCode: string | null
-  zip: string | null
-  territoryCode: string | null
-  phoneNumber: string | null
-}
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	address1: string | null;
+	address2: string | null;
+	city: string | null;
+	zoneCode: string | null;
+	zip: string | null;
+	territoryCode: string | null;
+	phoneNumber: string | null;
+};
 
 export const CUSTOMER_ADDRESSES_QUERY = /* GraphQL */ `
   query CustomerAddresses($first: Int!) {
@@ -80,14 +80,14 @@ export const CUSTOMER_ADDRESSES_QUERY = /* GraphQL */ `
       }
     }
   }
-`
+`;
 
 export type CustomerAddressesQueryResult = {
-  customer: {
-    addresses: { nodes: Array<CustomerAddress> }
-    defaultAddress: { id: string } | null
-  }
-}
+	customer: {
+		addresses: { nodes: Array<CustomerAddress> };
+		defaultAddress: { id: string } | null;
+	};
+};
 
 export const ORDERS_QUERY = /* GraphQL */ `
   query CustomerOrders($first: Int!, $after: String) {
@@ -116,25 +116,25 @@ export const ORDERS_QUERY = /* GraphQL */ `
       }
     }
   }
-`
+`;
 
 export type OrderListItem = {
-  id: string
-  name: string
-  processedAt: string
-  financialStatus: string | null
-  fulfillmentStatus: string | null
-  totalPrice: { amount: string; currencyCode: string }
-}
+	id: string;
+	name: string;
+	processedAt: string;
+	financialStatus: string | null;
+	fulfillmentStatus: string | null;
+	totalPrice: { amount: string; currencyCode: string };
+};
 
 export type OrdersQueryResult = {
-  customer: {
-    orders: {
-      nodes: Array<OrderListItem>
-      pageInfo: { hasNextPage: boolean; endCursor: string | null }
-    }
-  }
-}
+	customer: {
+		orders: {
+			nodes: Array<OrderListItem>;
+			pageInfo: { hasNextPage: boolean; endCursor: string | null };
+		};
+	};
+};
 
 export const ORDER_QUERY = /* GraphQL */ `
   query Order($id: ID!) {
@@ -190,43 +190,43 @@ export const ORDER_QUERY = /* GraphQL */ `
       }
     }
   }
-`
+`;
 
 export type OrderDetailLine = {
-  id: string
-  title: string
-  quantity: number
-  variantTitle: string | null
-  price: { amount: string; currencyCode: string }
-  image: {
-    url: string
-    altText: string | null
-    width: number | null
-    height: number | null
-  } | null
-}
+	id: string;
+	title: string;
+	quantity: number;
+	variantTitle: string | null;
+	price: { amount: string; currencyCode: string };
+	image: {
+		url: string;
+		altText: string | null;
+		width: number | null;
+		height: number | null;
+	} | null;
+};
 
 export type OrderDetail = {
-  id: string
-  name: string
-  processedAt: string
-  financialStatus: string | null
-  fulfillmentStatus: string | null
-  totalPrice: { amount: string; currencyCode: string }
-  subtotal: { amount: string; currencyCode: string } | null
-  totalShipping: { amount: string; currencyCode: string } | null
-  totalTax: { amount: string; currencyCode: string } | null
-  shippingAddress: {
-    firstName: string | null
-    lastName: string | null
-    address1: string | null
-    address2: string | null
-    city: string | null
-    zoneCode: string | null
-    zip: string | null
-    territoryCode: string | null
-  } | null
-  lineItems: { nodes: Array<OrderDetailLine> }
-}
+	id: string;
+	name: string;
+	processedAt: string;
+	financialStatus: string | null;
+	fulfillmentStatus: string | null;
+	totalPrice: { amount: string; currencyCode: string };
+	subtotal: { amount: string; currencyCode: string } | null;
+	totalShipping: { amount: string; currencyCode: string } | null;
+	totalTax: { amount: string; currencyCode: string } | null;
+	shippingAddress: {
+		firstName: string | null;
+		lastName: string | null;
+		address1: string | null;
+		address2: string | null;
+		city: string | null;
+		zoneCode: string | null;
+		zip: string | null;
+		territoryCode: string | null;
+	} | null;
+	lineItems: { nodes: Array<OrderDetailLine> };
+};
 
-export type OrderQueryResult = { order: OrderDetail | null }
+export type OrderQueryResult = { order: OrderDetail | null };

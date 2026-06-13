@@ -1,24 +1,24 @@
 import {
-  buildSession,
-  getDiscovery,
-  refreshTokens,
-  signSession,
-  verifySession,
-  type CustomerSession,
-} from '#/server/shopify/oauth'
+	clearSessionCookie,
+	getSessionCookie,
+	setSessionCookie,
+} from "#/server/shopify/customer-cookies";
 import {
-  clearSessionCookie,
-  getSessionCookie,
-  setSessionCookie,
-} from '#/server/shopify/customer-cookies'
+	buildSession,
+	type CustomerSession,
+	getDiscovery,
+	refreshTokens,
+	signSession,
+	verifySession,
+} from "#/server/shopify/oauth";
 
-const REFRESH_LEEWAY_MS = 60_000 // refresh if expiring within 60s
+const REFRESH_LEEWAY_MS = 60_000; // refresh if expiring within 60s
 
 class CustomerAuthError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'CustomerAuthError'
-  }
+	constructor(message: string) {
+		super(message);
+		this.name = "CustomerAuthError";
+	}
 }
 
 /**
@@ -26,74 +26,74 @@ class CustomerAuthError extends Error {
  * expiry. Returns null when the user is not signed in.
  */
 export async function getCustomerSession(): Promise<CustomerSession | null> {
-  const cookie = getSessionCookie()
-  if (!cookie) return null
+	const cookie = getSessionCookie();
+	if (!cookie) return null;
 
-  const session = await verifySession(cookie)
-  if (!session) {
-    clearSessionCookie()
-    return null
-  }
+	const session = await verifySession(cookie);
+	if (!session) {
+		clearSessionCookie();
+		return null;
+	}
 
-  if (session.expiresAt - REFRESH_LEEWAY_MS > Date.now()) {
-    return session
-  }
+	if (session.expiresAt - REFRESH_LEEWAY_MS > Date.now()) {
+		return session;
+	}
 
-  // Token expired or near-expiry — refresh.
-  try {
-    const refreshed = await refreshTokens(session.refreshToken)
-    const next = buildSession(refreshed)
-    setSessionCookie(await signSession(next))
-    return next
-  } catch {
-    clearSessionCookie()
-    return null
-  }
+	// Token expired or near-expiry — refresh.
+	try {
+		const refreshed = await refreshTokens(session.refreshToken);
+		const next = buildSession(refreshed);
+		setSessionCookie(await signSession(next));
+		return next;
+	} catch {
+		clearSessionCookie();
+		return null;
+	}
 }
 
 export async function requireCustomerSession(): Promise<CustomerSession> {
-  const session = await getCustomerSession()
-  if (!session) throw new CustomerAuthError('Not signed in')
-  return session
+	const session = await getCustomerSession();
+	if (!session) throw new CustomerAuthError("Not signed in");
+	return session;
 }
 
 type CustomerFetchInput<TVariables> = {
-  query: string
-  variables?: TVariables
-  session: CustomerSession
-}
+	query: string;
+	variables?: TVariables;
+	session: CustomerSession;
+};
 
 type CustomerResponse<TData> = {
-  data?: TData
-  errors?: Array<{ message: string }>
-}
+	data?: TData;
+	errors?: Array<{ message: string }>;
+};
 
 /**
  * Authenticated GraphQL fetch against the Customer Account API. Caller must
  * pass a verified session (obtained via getCustomerSession).
  */
 export async function customerFetch<
-  TData,
-  TVariables = Record<string, unknown>,
+	TData,
+	TVariables = Record<string, unknown>,
 >(input: CustomerFetchInput<TVariables>): Promise<TData> {
-  const discovery = await getDiscovery()
-  const res = await fetch(discovery.graphqlEndpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: input.session.accessToken,
-    },
-    body: JSON.stringify({ query: input.query, variables: input.variables }),
-  })
-  if (!res.ok) {
-    throw new Error(
-      `Customer Account API error: ${res.status} ${res.statusText}`,
-    )
-  }
-  const json = (await res.json()) as CustomerResponse<TData>
-  if (json.errors?.length) {
-    throw new Error(json.errors.map((e) => e.message).join('\n'))
-  }
-  if (!json.data) throw new Error('Customer Account API returned no data.')
-  return json.data
+	const discovery = await getDiscovery();
+	const res = await fetch(discovery.graphqlEndpoint, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: input.session.accessToken,
+		},
+		body: JSON.stringify({ query: input.query, variables: input.variables }),
+	});
+	if (!res.ok) {
+		throw new Error(
+			`Customer Account API error: ${res.status} ${res.statusText}`,
+		);
+	}
+	const json = (await res.json()) as CustomerResponse<TData>;
+	if (json.errors?.length) {
+		throw new Error(json.errors.map((e) => e.message).join("\n"));
+	}
+	if (!json.data) throw new Error("Customer Account API returned no data.");
+	return json.data;
 }
