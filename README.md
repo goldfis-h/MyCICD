@@ -1,3 +1,7 @@
+# MyCICD
+
+[![CI](https://github.com/goldfis-h/MyCICD/actions/workflows/ci.yml/badge.svg)](https://github.com/goldfis-h/MyCICD/actions/workflows/ci.yml)
+
 Welcome to your new TanStack Start app! 
 
 # Getting Started
