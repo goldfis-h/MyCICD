@@ -7,8 +7,33 @@ on:
     branches: [main]
 
 jobs:
-  hello-world:
+  quality:
     runs-on: ubuntu-latest
     steps:
-      - name: 打印欢迎信息
-        run: echo "🎉 我的第一个 GitHub Actions 流水线跑起来了！"
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Biome 检查
+        run: npx biome ci
+
+      - name: TypeScript 类型检查
+        run: npx tsc --noEmit
+
+      - name: 跑测试
+        run: npm test
+
+      - name: 构建
+        run: npm run build
