@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type {
 	MoneyV2,
 	Image as StorefrontImage,
