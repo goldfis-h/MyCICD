@@ -1,4 +1,4 @@
 {
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm build"
+  "buildCommand": "npx prisma generate && pnpm build"
 }
