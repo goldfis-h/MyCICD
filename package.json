@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "dotenv -e .env.local -- node --import ./instrument.server.mjs node_modules/vite/bin/vite.js dev --port 3000",
     "generate-routes": "tsr generate",
-    "build": "vite build && node -e \"require('fs').mkdirSync('.output/server',{recursive:true});require('fs').cpSync('instrument.server.mjs','.output/server/instrument.server.mjs')\"",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "biome format",
@@ -43,6 +43,7 @@
     "clsx": "^2.1.1",
     "dotenv-cli": "^11.0.0",
     "lucide-react": "^0.577.0",
+    "nitro": "3.0.260610-beta",
     "prisma": "^7.4.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
